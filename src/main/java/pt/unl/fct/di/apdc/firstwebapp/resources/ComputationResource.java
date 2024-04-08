@@ -1,8 +1,10 @@
 package pt.unl.fct.di.apdc.firstwebapp.resources;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
@@ -28,9 +30,10 @@ public class ComputationResource {
 	@GET
 	@Path("/hello")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response hello() {
-		LOG.fine("Saying hello!!");
-		return Response.ok().entity("Hello apdc-pei-2324 class! I hope you are having a fine day.").build();
+	public Response hello() throws IOException{
+		throw new IOException("UPS");
+//		LOG.fine("Saying hello!!");
+//		return Response.ok().entity("Hello apdc-pei-2324 class! I hope you are having a fine day.").build();
 	}
 	
 	@GET
@@ -39,5 +42,20 @@ public class ComputationResource {
 
 		LOG.fine("Replying to date request.");
 		return Response.ok().entity(g.toJson(fmt.format(new Date()))).build();
+	}
+
+
+	@GET
+	@Path("/compute")
+	public Response executeComputeTask() {
+		LOG.fine("Starting to execute computation taks");
+		try {
+			Thread.sleep(60*1000*10); //10 min...
+		} catch (Exception e) {
+			LOG.logp(Level.SEVERE, this.getClass().getCanonicalName(), "executeComputeTask"
+					, "An exception has ocurred", e);
+			return Response.serverError().build();
+		} //Simulates 60s execution
+		return Response.ok().build();
 	}
 }

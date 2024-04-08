@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .user-list-container {
+            text-align: center;
+        }
+        .user-list {
+            width: 50%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="user-list-container">
+    <div class="user-list" id="userList"></div>
+</div>
+
+<script>
+    // Function to fetch and display user list
+    function fetchUserList() {
+        fetch('https://adc-v2.ew.r.appspot.com/rest/edit_users/list_users', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch user list');
+                }
+            })
+            .then(data => {
+                displayUserList(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to fetch user list');
+            });
+    }
+
+    // Function to display user list
+    function displayUserList(userList) {
+        var userListDiv = document.getElementById("userList");
+        var userListHTML = "<h2>User List</h2><ul>";
+        userList.forEach(function(user) {
+            userListHTML += "<li><strong>Name:</strong> " + user.name + ", <strong>Role:</strong> " + user.role + "</li>";
+        });
+        userListHTML += "</ul>";
+        userListDiv.innerHTML = userListHTML;
+    }
+
+    // Call the function to fetch user list when the page loads
+    window.onload = function() {
+        fetchUserList();
+    };
+</script>
+</body>
+</html>

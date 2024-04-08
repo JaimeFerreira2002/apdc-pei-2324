@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            text-align: center;
+        }
+        .form-input {
+            margin-bottom: 10px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Delete User</h2>
+    <form id="deleteUserForm">
+        <label for="currentUser">Current User:</label><br>
+        <input type="text" id="currentUser" name="currentUser" class="form-input"><br>
+        <label for="userToDelete">User to Delete:</label><br>
+        <input type="text" id="userToDelete" name="userToDelete" class="form-input"><br>
+        <button type="submit" onclick="deleteUser()" class="button">Submit</button>
+        <button type="button" onclick="goBack()" class="button">Back</button>
+    </form>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+<script>
+    function deleteUser() {
+        var currentUsername = document.getElementById("currentUser").value;
+        var usernameToDelete = document.getElementById("userToDelete").value;
+
+        var data = {
+            currentUsername: currentUsername,
+            usernameToDelete: usernameToDelete
+        };
+
+        fetch('https://adc-v2.ew.r.appspot.com/rest/edit_users/delete_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to delete user');
+                }
+            })
+            .then(data => {
+                // Handle successful response
+                alert('User deleted successfully');
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error:', error);
+                alert('Failed to delete user');
+            });
+    }
+</script>
+
+
+
+</body>
+</html>
